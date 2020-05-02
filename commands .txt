@@ -1,0 +1,22 @@
+--Create the first volume to share
+docker volume create --name DataVolume1
+
+--Make a container named Container1 inside docker
+docker run -ti --name=Container1 -v DataVolume1:/datavolume1 ubuntu
+
+--Make a file that you want to share between the containers
+echo"Share this file between containers" > /datavolume1/Example.txt
+
+--Mount new container named Container2 with Container1
+docker run -ti --name=Container2 --volume-from Container1 ubuntu
+
+--Enter text into Container2
+echo "This will also appear in DataVolume1" >> /datavolume1/Example.txt
+
+--stop then start your Container1
+docker start Container1
+
+-- make sure the containers can talk by being inside a container
+cat /datavolume1/Example.txt
+
+When you finish these steps you should see both texts appear.
